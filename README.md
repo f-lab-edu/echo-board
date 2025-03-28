@@ -7,7 +7,7 @@ FastAPI와 Pydantic을 사용하여 게시글 생성 및 조회 기능을 제공
 
 ### 1. 설치
 
-1. 레포지토리 다운로드:
+1. 레포지토리 다운로드
    ```bash
    https://github.com/f-lab-edu/echo-board.git
    ```
