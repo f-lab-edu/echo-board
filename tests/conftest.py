@@ -3,6 +3,7 @@ from collections.abc import AsyncGenerator
 import pytest_asyncio
 from fastapi import FastAPI
 from httpx import ASGITransport, AsyncClient
+
 from src.main import app as fastapi_app
 
 
