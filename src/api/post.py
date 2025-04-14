@@ -15,7 +15,7 @@ class PostResponse(BaseModel):
     author: str
     title: str
     content: str
-    created_at: datetime
+    created_at: datetime  # TODO: 시각에 대한 표현방법이 어떤 것들이 있는지. string, int을 사용 방식 -> 언제 내가 사용해야 하는지?
 
 
 class PostRequest(BaseModel):
@@ -33,6 +33,9 @@ async def create_post(
     post: PostRequest, x_author: str = Header(..., alias="X-Author")
 ) -> PostResponse:
     new_post = PostResponse(
+        # TODO: uuid, ulid 써보기.
+        # NOTE: id를 만드는 방식 AUTO INCREMENT, uuid 이게 뭔지, 각 장단점
+        # ulid 는 왜? 언제? 어떤 문제를 해결하는지
         id=str(uuid4()),
         author=x_author,
         title=post.title,
@@ -58,7 +61,7 @@ async def get_posts() -> list[PostResponse]:
 async def get_post(post_id: str) -> PostResponse:
     post = next((p for p in posts if p.id == post_id), None)
     if post is None:
-        raise HTTPException(status_code=404, detail="Post not found")
+        raise HTTPException(status_code=404, detail="Post not found")  # TODO: 404 fastapi.status <- 사용해보기
     return post
 
 
@@ -68,7 +71,7 @@ async def get_post(post_id: str) -> PostResponse:
     status_code=status.HTTP_200_OK,
 )
 async def update_post(
-    post_id: str, post_data: PostRequest, x_author: str = Header(..., alias="X-Author")
+    post_id: str, post_data: PostRequest, x_author: str = Header(..., alias="X-Author")  # TODO: 요청 헤더에 이름을 붙이는 컨벤션들 뭐가 있을까?
 ) -> PostResponse:
     post_index = next((i for i, p in enumerate(posts) if p.id == post_id), None)
 
@@ -81,7 +84,7 @@ async def update_post(
     post = posts[post_index]
     if post.author != x_author:
         raise HTTPException(
-            status_code=status.HTTP_403_FORBIDDEN,
+            status_code=status.HTTP_403_FORBIDDEN,  # TODO: 4XX 에러 다 정리하기 (401, 403, 404, 405, 409 설명 할 수 있어야 함)
             detail="Access denied: not the post owner.",
         )
 
