@@ -16,6 +16,10 @@ pydantic-settings = "^2.8.1"
 pytest = "^8.3.5"
 httpx = "^0.28.1"
 pytest-asyncio = "^0.26.0"
+black = "^25.1.0"
+pycln = "^2.5.0"
+isort = "^6.0.1"
+pre-commit = "^4.2.0"
 
 [tool.poetry.scripts]
 dev = "src.server:run"
@@ -23,3 +27,14 @@ dev = "src.server:run"
 [build-system]
 requires = ["poetry-core"]
 build-backend = "poetry.core.masonry.api"
+
+[tool.black]
+line-length = 80
+target-version = ["py312"]
+
+[tool.isort]
+profile = "black"
+line_length = 80
+ensure_newline_before_comments = true
+force_sort_within_sections = true
+known_first_party = ["src"]
