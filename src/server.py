@@ -1,9 +1,7 @@
 import uvicorn
 
-from src import config
+from src.config import dev
 
 
 def run():
-    uvicorn.run(
-        "src.main:app", host=config.dev.host, port=config.dev.port, reload=True
-    )
+    uvicorn.run("src.main:app", host=dev.host, port=dev.port, reload=True)
