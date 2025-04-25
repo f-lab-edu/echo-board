@@ -14,6 +14,7 @@ post_router = APIRouter()
 
 TIME_ZONE = ZoneInfo("Asia/Seoul")
 
+# TODO: 의존성 주입에 대해 설명하기.
 SessionDep = Annotated[Session, Depends(get_session)]
 
 
@@ -22,6 +23,7 @@ class PostResponse(BaseModel):
     author: str
     title: str
     content: str
+    # TODO: 시각에 대한 표현방법(ISO-8601, unix timestamp 등)이 어떤 것들이 있는지 설명하기.
     created_at: datetime
 
 
@@ -42,6 +44,7 @@ async def create_post(
     session: SessionDep,
     author: str = Header(..., alias="Author"),
 ) -> PostResponse:
+    # TODO: id를 만드는 여러 방식에 대해 설명하기.
     new_post = Post(
         id=str(ULID()),
         author=author,
@@ -51,6 +54,8 @@ async def create_post(
     )
     session.add(new_post)
     session.commit()
+
+    # TODO: refersh와 flush의 차이 설명하기
     session.refresh(new_post)
 
     return PostResponse.model_validate(new_post, from_attributes=True)
@@ -79,6 +84,7 @@ async def get_post(session: SessionDep, post_id: str) -> PostResponse:
     if post is None:
         raise HTTPException(
             status_code=status.HTTP_404_NOT_FOUND,
+            # TODO: 에러 메시지는 어떻게 작성하는 것이 좋은지 설명하기.
             detail=f"Post with id '{post_id}' not found.",
         )
 
@@ -101,6 +107,7 @@ async def update_post(
 
     if post is None:
         raise HTTPException(
+            # TODO: 2XX, 4XX 등 Status Code들 설명하기 (401, 403, 404, 405, 409 설명 할 수 있어야 함)
             status_code=status.HTTP_404_NOT_FOUND,
             detail=f"Post with id '{post_id}' not found.",
         )
@@ -146,7 +153,9 @@ async def delete_post(
             detail="Access denied: not the post owner.",
         )
 
+    # Hard / Soft Delete 차이 설명하기.
     session.delete(post)
     session.commit()
 
+    # TODO: 함수의 반환 값으로 dict를 사용하는게 왜 좋지 않은지, 클래스를 쓰는게 왜 더 좋은지 설명하기.
     return DeletePostResponse(message=f"Post '{post_id}' deleted successfully.")
