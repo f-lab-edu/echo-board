@@ -2,6 +2,9 @@ from sqlmodel import Session, SQLModel, create_engine
 
 sqlite_file_name = "echo_board.db"
 DATABASE_URL = f"sqlite:///{sqlite_file_name}"
+
+# TODO: 커넥션 풀에 대해 설명하기.
+# TODO: create_engine의 주요 파라미터들에 대해 설명하기.
 ENGINE = create_engine(
     DATABASE_URL,
     echo=True,
