@@ -107,7 +107,7 @@ def update_post(
 
     if post is None:
         raise HTTPException(
-            # TODO: 2XX, 4XX 등 Status Code들 설명하기 (401, 403, 404, 405, 409 설명 할 수 있어야 함)
+            # TODO: 2XX, 4XX 등 Status Code들 설명하기 (401, 403, 404, 405, 409, 429, 422 설명 할 수 있어야 함)
             status_code=status.HTTP_404_NOT_FOUND,
             detail=f"Post with id '{post_id}' not found.",
         )
