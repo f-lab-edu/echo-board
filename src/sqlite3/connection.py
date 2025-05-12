@@ -16,8 +16,6 @@ ENGINE = create_engine(
     max_overflow=10,
 )
 
-SQLModel.metadata.create_all(ENGINE)
-
 
 def init_db():
     SQLModel.metadata.create_all(ENGINE)
