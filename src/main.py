@@ -1,7 +1,6 @@
 from typing import Annotated
 
 from fastapi import Depends, FastAPI
-from fastapi.concurrency import asynccontextmanager
 from sqlmodel import Session
 
 from src.api.health import health_router
@@ -11,8 +10,7 @@ from src.sqlite3.connection import get_session, init_db
 SessionDep = Annotated[Session, Depends(get_session)]
 
 
-@asynccontextmanager
-async def lifespan(app: FastAPI):
+def lifespan(app: FastAPI):
     init_db()
     yield
 

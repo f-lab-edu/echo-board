@@ -39,7 +39,7 @@ class DeletePostResponse(BaseModel):
 @post_router.post(
     "/posts", response_model=PostResponse, status_code=status.HTTP_201_CREATED
 )
-async def create_post(
+def create_post(
     post: PostRequest,
     session: SessionDep,
     author: str = Header(..., alias="Author"),
@@ -64,7 +64,7 @@ async def create_post(
 @post_router.get(
     "/posts", response_model=list[PostResponse], status_code=status.HTTP_200_OK
 )
-async def get_posts(session: SessionDep) -> list[PostResponse]:
+def get_posts(session: SessionDep) -> list[PostResponse]:
     stmt = select(Post)
     results = session.exec(stmt).all()
     return [
@@ -77,7 +77,7 @@ async def get_posts(session: SessionDep) -> list[PostResponse]:
     response_model=PostResponse,
     status_code=status.HTTP_200_OK,
 )
-async def get_post(session: SessionDep, post_id: str) -> PostResponse:
+def get_post(session: SessionDep, post_id: str) -> PostResponse:
     stmt = select(Post).where(Post.id == post_id)
     post = session.exec(stmt).first()
 
@@ -96,7 +96,7 @@ async def get_post(session: SessionDep, post_id: str) -> PostResponse:
     response_model=PostResponse,
     status_code=status.HTTP_200_OK,
 )
-async def update_post(
+def update_post(
     post_id: str,
     post_data: PostRequest,
     session: SessionDep,
@@ -133,7 +133,7 @@ async def update_post(
     response_model=DeletePostResponse,
     status_code=status.HTTP_200_OK,
 )
-async def delete_post(
+def delete_post(
     post_id: str,
     session: SessionDep,
     author: str = Header(..., alias="Author"),
