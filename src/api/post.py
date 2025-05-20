@@ -14,6 +14,7 @@ post_router = APIRouter()
 TIME_ZONE = ZoneInfo("Asia/Seoul")
 
 # TODO: 의존성 주입에 대해 설명하기.
+# ❕ 과제: DB가 바뀌어도, 이 안에있는 코드들은 바뀌지 않도록 설계 해보기
 SessionDep = Annotated[Session, Depends(get_session)]
 
 
