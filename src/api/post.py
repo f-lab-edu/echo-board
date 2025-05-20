@@ -3,12 +3,11 @@ from typing import Annotated
 from zoneinfo import ZoneInfo
 
 from fastapi import APIRouter, Depends, Header, HTTPException, status
-from pydantic import BaseModel
 from sqlmodel import Session, select
 from ulid import ULID
 
+from src.domain.post import DeletePostResponse, Post, PostRequest, PostResponse
 from src.sqlite3.connection import get_session
-from src.sqlite3.models.post import Post
 
 post_router = APIRouter()
 
@@ -16,24 +15,6 @@ TIME_ZONE = ZoneInfo("Asia/Seoul")
 
 # TODO: 의존성 주입에 대해 설명하기.
 SessionDep = Annotated[Session, Depends(get_session)]
-
-
-class PostResponse(BaseModel):
-    id: str
-    author: str
-    title: str
-    content: str
-    # TODO: 시각에 대한 표현방법(ISO-8601, unix timestamp 등)이 어떤 것들이 있는지 설명하기.
-    created_at: datetime
-
-
-class PostRequest(BaseModel):
-    title: str
-    content: str
-
-
-class DeletePostResponse(BaseModel):
-    message: str
 
 
 @post_router.post(
