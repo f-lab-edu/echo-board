@@ -1,3 +1,5 @@
+from typing import Literal
+
 from pydantic import Field
 from pydantic_settings import BaseSettings, SettingsConfigDict
 
@@ -10,5 +12,7 @@ class ServerConfig(BaseSettings):
 
     model_config = SettingsConfigDict(env_file=".env")
 
+    # TODO: database_type에 따라 실제 사용하는 Database가 달라지게 해보기
+    database_type: Literal["sqlite", "in-memory"] = Field(...)
 
 dev = ServerConfig()
