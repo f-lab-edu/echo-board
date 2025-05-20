@@ -28,7 +28,7 @@ FastAPI와 Pydantic을 사용하여 게시글 생성 및 조회 기능을 제공
 
 ### 2. 서버 실행 방법
 - 실행 : `poetry run dev`
-  
+
 ### 3. Poetry 가상환경 종료
 - 종료 : `exit`
 
