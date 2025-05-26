@@ -2,11 +2,13 @@ from datetime import datetime
 from typing import Annotated
 from zoneinfo import ZoneInfo
 
-from fastapi import APIRouter, Depends, Header, HTTPException, status
+from fastapi import APIRouter, Depends, Header, HTTPException, Query, status
 from sqlmodel import Session, select
 from ulid import ULID
 
+from src.domain.comment import CommentResponse
 from src.domain.post import DeletePostResponse, Post, PostRequest, PostResponse
+from src.service.comment import get_comments_by_post_service
 from src.sqlite3.connection import get_session
 
 post_router = APIRouter()
@@ -29,7 +31,7 @@ def create_post(
     # TODO: id를 만드는 여러 방식에 대해 설명하기.
     new_post = Post(
         id=str(ULID()),
-        author=author,
+        author_id=author,
         title=post.title,
         content=post.content,
         created_at=datetime.now(TIME_ZONE),
@@ -141,3 +143,17 @@ def delete_post(
 
     # TODO: 함수의 반환 값으로 dict를 사용하는게 왜 좋지 않은지, 클래스를 쓰는게 왜 더 좋은지 설명하기.
     return DeletePostResponse(message=f"Post '{post_id}' deleted successfully.")
+
+
+@post_router.get(
+    "/posts/{post_id}/comments",
+    response_model=list[CommentResponse],
+    status_code=status.HTTP_200_OK,
+)
+def get_comments_by_post(
+    post_id: str,
+    session: SessionDep,
+    limit: int = Query(10, ge=1, le=100),
+    offset: int = Query(0, ge=0),
+):
+    return get_comments_by_post_service(post_id, session, limit, offset)

@@ -1,7 +1,23 @@
-from sqlmodel import Session, SQLModel, create_engine
+from sqlmodel import Session, SQLModel, StaticPool, create_engine
 
-sqlite_file_name = "echo_board.db"
-DATABASE_URL = f"sqlite:///{sqlite_file_name}"
+from src.config import ServerConfig
+
+config = ServerConfig()
+
+
+if config.database_type == "sqlite":
+    DATABASE_URL = "sqlite:///echo_board.db"
+    pool_options = {
+        "pool_size": 5,
+        "max_overflow": 10,
+    }
+elif config.database_type == "in-memory":
+    DATABASE_URL = "sqlite:///:memory:"
+    pool_options = {"poolclass": StaticPool}
+
+else:
+    raise ValueError(f"database_type: {config.database_type}")
+
 
 # TODO: 커넥션 풀에 대해 설명하기.
 # TODO: create_engine의 주요 파라미터들에 대해 설명하기.
@@ -9,11 +25,8 @@ DATABASE_URL = f"sqlite:///{sqlite_file_name}"
 ENGINE = create_engine(
     DATABASE_URL,
     echo=True,
-    connect_args={
-        "check_same_thread": False,
-    },
-    pool_size=5,
-    max_overflow=10,
+    connect_args={"check_same_thread": False},
+    **pool_options,
 )
 
 
