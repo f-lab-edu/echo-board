@@ -20,7 +20,7 @@ class Post(SQLModel, table=True):
 
 class PostResponse(BaseModel):
     id: str
-    author: str
+    author_id: str
     title: str
     content: str
     # TODO: 시각에 대한 표현방법(ISO-8601, unix timestamp 등)이 어떤 것들이 있는지 설명하기.

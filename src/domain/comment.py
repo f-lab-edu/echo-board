@@ -9,9 +9,7 @@ TIME_ZONE = ZoneInfo("Asia/Seoul")
 
 
 class Comment(SQLModel, table=True):
-    comment_id: str = Field(
-        default_factory=lambda: str(ULID()), primary_key=True
-    )
+    id: str = Field(default_factory=lambda: str(ULID()), primary_key=True)
     author_id: str = Field(foreign_key="user.id")
     post_id: str = Field(foreign_key="post.id")
     content: str
@@ -20,17 +18,35 @@ class Comment(SQLModel, table=True):
     )
 
 
-class CommentResponse(BaseModel):
-    comment_id: str
-    author_id: str
+class CommentCreateRequest(BaseModel):
     post_id: str
+    content: str
+
+
+class CommentUpdateRequest(BaseModel):
+    content: str
+
+
+class CommentResponse(BaseModel):
+    id: str
+    post_id: str
+    author_id: str
     content: str
     created_at: datetime
 
     model_config = {"from_attributes": True}
 
 
-class CommentCreateRequest(BaseModel):
-    author_id: str
-    post_id: str
-    content: str
+# class CommentResponse(BaseModel):
+#     id: str
+#     post_id: str
+#     content: str
+#     created_at: datetime
+
+#     model_config = {"from_attributes": True}
+
+
+# class CommentCreateRequest(BaseModel):
+#     author_id: str
+#     post_id: str
+#     content: str

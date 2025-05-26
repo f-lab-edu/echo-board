@@ -13,6 +13,9 @@ class ServerConfig(BaseSettings):
     model_config = SettingsConfigDict(env_file=".env")
 
     # TODO: database_type에 따라 실제 사용하는 Database가 달라지게 해보기
-    database_type: Literal["sqlite", "in-memory"] = Field(...)
+    database_type: Literal["sqlite", "in-memory"] = Field(
+        default="sqlite", alias="DATABASE_TYPE"
+    )
+
 
 dev = ServerConfig()
