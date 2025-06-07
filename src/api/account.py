@@ -23,6 +23,7 @@ TIME_ZONE = ZoneInfo("Asia/Seoul")
 SessionDep = Annotated[Session, Depends(get_session)]
 
 
+# CONSIDERATION: `account.py` 이니, /auth 대신 /account 를 사용하는건 어떨까요?
 @auth_router.post(
     "/auth", response_model=UserResponse, status_code=status.HTTP_201_CREATED
 )
@@ -44,6 +45,7 @@ def create_user(data: UserCreateRequest, session: SessionDep) -> None:
     return create_user_service(data, session)
 
 
+# TODO: 반환 값 타입 힌팅이 추가 필요. (타입 힌팅을 항상 챙겨주세요!)
 @auth_router.get("/auth/{auth_id}/posts", response_model=list[PostResponse])
 def get_posts_by_user(
     auth_id: str,
