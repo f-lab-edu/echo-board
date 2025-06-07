@@ -19,6 +19,9 @@ class User(SQLModel, table=True):
 
 
 class UserCreateRequest(BaseModel):
+    # TODO: 서비스 레벨에서 값을 검증하는 것과, API 레벨에서 검증하는 것. 섞여있네요.
+    # 언제 서비스 레벨에서 검증해야 하고, 언제 API 레벨에서 검증해야할까요?
+    # 레이어드 아키텍처에서 API 레이어와 비즈니스, 도메인 레이어의 역할에 대해 찾아보세요!
     username: str = Field(
         min_length=3, max_length=30, description="Unique user ID"
     )
