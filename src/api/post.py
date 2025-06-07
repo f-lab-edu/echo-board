@@ -45,12 +45,17 @@ def create_post(
     return PostResponse.model_validate(new_post, from_attributes=True)
 
 
+# TODO: 페이지네이션 구현 필요.
+# TODO: 페이지네이션 종류 찾아보고 설명하기 (ex. 전통적, 커서 기반)
 @post_router.get(
     "/posts", response_model=list[PostResponse], status_code=status.HTTP_200_OK
 )
 def get_posts(session: SessionDep) -> list[PostResponse]:
     stmt = select(Post)
     results = session.exec(stmt).all()
+
+    # TODO: 확장성 있게 응답 스키마를 만드려면, 과연 리스트가 좋을까요? 더 좋은 방법은 없을까요?
+    # ex. 예를 들어 응답에 total, next page 등이 추가가 된다면?
     return [
         PostResponse.model_validate(p, from_attributes=True) for p in results
     ]
@@ -58,7 +63,7 @@ def get_posts(session: SessionDep) -> list[PostResponse]:
 
 @post_router.get(
     "/posts/{post_id}",
-    response_model=PostResponse,
+    response_model=PostResponse,  # TODO: 아래 타입 힌팅이 있어서, 이 부분은 필요 없습니다. (이거 지우고 테스트 해보시죠!)
     status_code=status.HTTP_200_OK,
 )
 def get_post(session: SessionDep, post_id: str) -> PostResponse:
@@ -82,6 +87,8 @@ def get_post(session: SessionDep, post_id: str) -> PostResponse:
 )
 def update_post(
     post_id: str,
+    # COMMENT: 이건 팁인데, 저는 보통 헷갈림 방지를 위해 클래스 이름과 인스턴스 이름을 (거의) 동일하게 둡니다.
+    # ex. request: PostRequest
     post_data: PostRequest,
     session: SessionDep,
     author: str = Header(..., alias="Author"),
@@ -137,11 +144,17 @@ def delete_post(
             detail="Access denied: not the post owner.",
         )
 
-    # Hard / Soft Delete 차이 설명하기.
+    # TODO: Hard / Soft Delete 차이 설명하기.
     session.delete(post)
     session.commit()
 
     # TODO: 함수의 반환 값으로 dict를 사용하는게 왜 좋지 않은지, 클래스를 쓰는게 왜 더 좋은지 설명하기.
+    # COMMENT: 이전에 UserCreateResponse를 본적이 있는데, 여기서는 DeletePostRespones 군요.
+    #          이런 DTO 클래스의 이름은 일관되게 지어주는게 좋습니다.
+    #          저는 보통 DTO 클래스가 사용되는 함수 이름을 따라서 동사+명사 형태로 짓습니다.
+    #          ex. delete_post(request: DeletePostRequest) -> DeletePostResponse
+    #          ex. create_user(request: CreateUserRequest) -> CreateUserResponse
+    #          이와 관련해서는 "클린 아키텍처" 책을 읽어보시길 추천드립니다. 
     return DeletePostResponse(message=f"Post '{post_id}' deleted successfully.")
 
 
