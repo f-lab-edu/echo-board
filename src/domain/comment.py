@@ -16,6 +16,9 @@ class Comment(SQLModel, table=True):
     created_at: datetime = Field(
         default_factory=lambda: datetime.now(TIME_ZONE), nullable=False
     )
+    # TODO: updated_at 이 없군요!
+    # 보통 created_at은 필수적으로 두고, 수정될 여지가 있는 엔티티들은 updated_at 도 같이 둡니다.
+    # 수정될 여지가 없는 (ex. 로그, 이벤트 등)은 updated_at을 두지 않구요.
 
 
 class CommentCreateRequest(BaseModel):
@@ -36,6 +39,8 @@ class CommentResponse(BaseModel):
 
     model_config = {"from_attributes": True}
 
+
+# TODO: 필요없는 코드는 항상 제거 해둡시다!
 
 # class CommentResponse(BaseModel):
 #     id: str
